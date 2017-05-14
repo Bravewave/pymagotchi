@@ -1,6 +1,6 @@
 # Import the time module
 import time
-
+"""
 # Game intro and instructions
 print("  _______                                _       _     _ \n |__   __|                              | |     | |   (_)\n    | | __ _ _ __ ___   __ _  __ _  ___ | |_ ___| |__  _ \n    | |/ _` | '_ ` _ \ / _` |/ _` |/ _ \| __/ __| '_ \| |\n    | | (_| | | | | | | (_| | (_| | (_) | || (__| | | | |\n    |_|\__,_|_| |_| |_|\__,_|\__, |\___/ \__\___|_| |_|_|\n                              __/ |                      \n                             |___/                       ")
 time.sleep(3)
@@ -22,7 +22,7 @@ print("7. Your Tamagotchi's health cannot go above 100%, nor can its hunger go b
 time.sleep(2)
 print("Enjoy the simulator! Press A to start!")
 start = input().lower()
-
+"""
 # Creature stats stored in a dictionary
 creature = {
     "level": 1,
@@ -31,6 +31,7 @@ creature = {
     "hunger": 0,
     "sleep": 0,
     "skill": 0,
+    "score": 0,
     "tired": False,
     "sick": False,
     "tricks": {
@@ -70,22 +71,36 @@ shop = {
     "Tama-Corp DLux Bytes": 22
 }
 
+
 # Competing in a competition
 def compete():
-    print("You entered into a Tamagotchi competition!")
-    time.sleep(2)
     print("Your Tamagotchi has " + str(len(creature["tricks"])) + " tricks:")
     for key in creature["tricks"]:
-        print(key + ": worth %s points" % (creature["tricks"[key]]))
+        print(key + ": worth %s points" % (creature['tricks'][key][1]))
     time.sleep(2)
     print("Enter the name of the trick you'd like to do, as shown above:")
     trick = input()
+    pull_trick(trick)
+
 
 # Do a trick in the competition
 def pull_trick(_trick):
-    print("Your Tamagotchi " + creature["tricks"[_trick[0]]] + "!")
-    print("Your score went up by " + str(creature["tricks"[_trick[1]]]) + "!")
-
+    if _trick in creature["tricks"]:
+        print("Your Tamagotchi " + str(creature["tricks"][_trick][0]) + "!")
+        time.sleep(2)
+        creature["score"] += creature["tricks"][_trick][1]
+        print("Your score went up by " + str(creature["tricks"][_trick][1]) + "!")
+        time.sleep(2)
+        print("Your current score is: " + str(creature["score"]))
+        print("Pull another trick? (y/n)")
+        again = input()
+        if again == "y":
+            compete()
+        else:
+            pass
+    else:
+        print("Trick not recognised...")
+        compete()
 
 # Feed function
 def feed():
@@ -148,11 +163,13 @@ def play():
             pass
 
         # Give the player a choice of what they want to do with their creature
-        print("Do you want to feed your Tamagotchi or wait another turn? (feed/wait)")
+        print("What do you want to do to your Tamagotchi? (feed/wait/compete)")
         choice = input()
         if choice == "feed":
             # If they choose to feed, run the feed() function
             feed()
+        elif choice == "compete":
+            compete()
         elif choice == "wait":
             # Else, just do nothing
             pass
